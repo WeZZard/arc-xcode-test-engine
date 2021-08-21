@@ -172,12 +172,13 @@ final class XcodeUnitTestEngine extends ArcanistUnitTestEngine {
         throw new Exception('Unable to find OBJROOT configuration.');
       }
       $objroot = $matches[1];
+      $coverage_dir = dirname($objroot);
 
-      $future = new ExecFuture("find %C -name Coverage.profdata", $objroot);
+      $future = new ExecFuture("find %C -name Coverage.profdata", $coverage_dir);
       list(, $coverage_stdout, ) = $future->resolve();
       $profdata_path = explode("\n", $coverage_stdout)[0];
 
-      $future = new ExecFuture("find %C | grep %C", $objroot, $this->coverage['product']);
+      $future = new ExecFuture("find %C | grep %C", $coverage_dir, $this->coverage['product']);
       list(, $product_stdout, ) = $future->resolve();
       $product_path = explode("\n", $product_stdout)[0];
 
